@@ -20,22 +20,6 @@ namespace ACRE_Create_Casus.Models
         }
 
 
-        //DataAccesLayer stuff
-        DataAccesLayer dal = new DataAccesLayer();
-
-        public void UpdateObservation(Observation observation)
-        {
-            dal.UpdateObservation(observation);
-        }
-
-        public void DeleteObservation(int observationId)
-        {
-            dal.DeleteObservation(observationId);
-        }
-
-        public void ApproveObservation(int observationId)
-        {
-            dal.ApproveObservation(observationId);
-        }
+        
     }
 }

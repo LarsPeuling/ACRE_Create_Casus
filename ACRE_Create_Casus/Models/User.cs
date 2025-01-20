@@ -19,28 +19,7 @@ namespace ACRE_Create_Casus.Models
         }
 
 
-        //DataAccesLayer stuff
-        DataAccesLayer dal = new DataAccesLayer();
-        //Create observation
-        public Observation CreateObservation(DateTime date, int userId, bool isAnimal, string description)
-        {
-            Observation observation = new Observation(date, userId, isAnimal, description);
-            return dal.CreateObservation(observation);
-        }
-
-        //Create animal
-        public Animal CreateAnimal(int id, string name, string location, string photo)
-        {
-            Animal a = new Animal(id, name, location, photo);
-            return dal.CreateAnimal(a);
-        }
-
-
-        //Create plant
-        public Plant CreatePlant(int id, string name, string location, string photo)
-        {
-            return new Plant(id, name, location, photo);
-        }
+       
 
     }
 }

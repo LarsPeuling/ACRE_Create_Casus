@@ -1,10 +1,97 @@
-﻿namespace ACRE_Create_Casus
+﻿using ACRE_Create_Casus.Models;
+
+namespace ACRE_Create_Casus
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            bool running = true;
+
+            while (running)
+            {
+                Console.WriteLine("Welcome to ACRE_CREATE_CASUS" +
+                "\nMade By: Team Herkansers" +
+                "\nPlease choose an option:" +
+                "\n1. Create an Observation;" +
+                "\n2. I am a Moderator" +
+                "\n3. Exit");
+
+                //User input
+                string input = Console.ReadLine();
+
+                switch (input)
+                {
+                    case "1":
+                        Console.WriteLine("Please state your role:");
+                        string role = Console.ReadLine();
+                        User user = new User(role);
+                        Console.WriteLine("Please enter the following of your Observation:" +
+                            "\nYour UserId:" +
+                            "\nIf it is an animal (True if it is an animal, False if it is not an animal):" +
+                            "\nA small description of your Observation:");
+                        int userId = Convert.ToInt32(Console.ReadLine());
+                        bool isAnimal = Convert.ToBoolean(Console.ReadLine());
+                        string description = Console.ReadLine();
+                        Observation observation = user.CreateObservation(DateTime.Now, userId, isAnimal, description);
+                        break;
+                    case "2":
+                        Console.WriteLine("Please enter your name:");
+                        string name = Console.ReadLine();
+                        Console.WriteLine("Please enter your email:");
+                        string email = Console.ReadLine();
+                        Moderator moderator = new Moderator(1, name, email);
+                        Console.WriteLine("Choose an action to perform:" +
+                            "\n1. Update Observation;" +
+                            "\n2. Validate Observation" +
+                            "\n3. Delete observation");
+                        string action = Console.ReadLine();
+                        switch (action)
+                        {
+                            case "1":
+                                Console.WriteLine("Please enter the following of the Observation to be updated:" +
+                                    "\nObservation Id:" +
+                                    "\nObservation UserId:" +
+                                    "\nIf it is an animal (True if it is an animal, False if it is not an animal):" +
+                                    "\nA small description of your Observation:");
+                                int id = Convert.ToInt32(Console.ReadLine());
+                                DateTime date = DateTime.Now;
+                                int usrID = Convert.ToInt32(Console.ReadLine());
+                                bool b_isAnimal = Convert.ToBoolean(Console.ReadLine());
+                                string s_description = Console.ReadLine();
+                                Observation observation1 = new Observation(id, date, usrID, b_isAnimal, s_description, false);
+                                moderator.UpdateObservation(observation1);
+                                break;
+
+                            case "2":
+                                Console.WriteLine("");
+                                Console.WriteLine("Please enter the following of the Observation you want to validate:" +
+                                    "\nObservation Id:");
+                                int observationId = Convert.ToInt32(Console.ReadLine());
+                                moderator.ApproveObservation(observationId);
+                                break;
+
+                            case "3":
+                                Console.WriteLine("Please enter the following of the Observation you want to delete:" +
+                                    "\nObservation Id:");
+                                int observationId1 = Convert.ToInt32(Console.ReadLine());
+                                moderator.DeleteObservation(observationId1);
+                                break;
+
+                        }
+                    break;
+                    case "3":
+                        running = false;
+                        break;
+                    default:
+                        Console.WriteLine("Invalid input");
+                        return;
+                }
+
+                Console.WriteLine();
+            }
+
+
         }
     }
 }

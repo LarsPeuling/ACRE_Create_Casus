@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ACRE_Create_Casus.DAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,25 @@ namespace ACRE_Create_Casus.Models
             Id = id;
             Name = name;
             Email = email;
+        }
+
+
+        //DataAccesLayer stuff
+        DataAccesLayer dal = new DataAccesLayer();
+
+        public void UpdateObservation(Observation observation)
+        {
+            dal.UpdateObservation(observation);
+        }
+
+        public void DeleteObservation(int observationId)
+        {
+            dal.DeleteObservation(observationId);
+        }
+
+        public void ApproveObservation(int observationId)
+        {
+            dal.ApproveObservation(observationId);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ACRE_Create_Casus.Models;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,41 @@ namespace ACRE_Create_Casus.DAL
 {
     public class DataAccesLayer
     {
+        public static async Task<List<string>> ConnectToDB()
+        {
+            var builder = new MySqlConnectionStringBuilder
+            {
+                Server = "57.153.168.38",
+                Database = "my_database",
+                UserID = "azureuser",
+                Password = "Azureuser!!!",
+                SslMode = MySqlSslMode.Required,
+                ConnectionTimeout = 30 // Uncomment to set a timeout
+            };
+
+            var results = new List<string>(); // List to hold the results
+
+            using (var conn = new MySqlConnection(builder.ConnectionString))
+            {
+                Console.WriteLine("Opening connection");
+                await conn.OpenAsync();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM Gebruiker";
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            results.Add(reader.GetString(0)); // Add the first column to the results
+                        }
+                    }
+                }
+                Console.WriteLine("Closing connection");
+            }
+
+            return results; // Return the results
+        }
         //Crud Animal
         public Animal GetAnimal(int id)
         {

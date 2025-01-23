@@ -1,4 +1,5 @@
 ﻿using ACRE_Create_Casus.Models;
+using ACRE_Create_Casus.BusinessLayer;
 
 namespace ACRE_Create_Casus
 {
@@ -7,10 +8,13 @@ namespace ACRE_Create_Casus
         static void Main(string[] args)
         {
             bool running = true;
+            ModelsToDAL mtd = new ModelsToDAL();
 
             while (running)
             {
-                Console.WriteLine("Welcome to ACRE_CREATE_CASUS" +
+                //string data = mtd.ConnToDal();
+                Console.WriteLine($"{mtd.ConnToDal() }");
+               /* Console.WriteLine("Welcome to ACRE_CREATE_CASUS" +
                 "\nMade By: Team Herkansers" +
                 "\nPlease choose an option:" +
                 "\n1. Create an Observation;" +
@@ -25,7 +29,7 @@ namespace ACRE_Create_Casus
                     case "1":
                         Console.WriteLine("Please state your role:");
                         string role = Console.ReadLine();
-                        User user = new User(role);
+                        //ModelsToDAL modelsToDAL = new ModelsToDAL();
                         Console.WriteLine("Please enter the following of your Observation:" +
                             "\nYour UserId:" +
                             "\nIf it is an animal (True if it is an animal, False if it is not an animal):" +
@@ -33,7 +37,7 @@ namespace ACRE_Create_Casus
                         int userId = Convert.ToInt32(Console.ReadLine());
                         bool isAnimal = Convert.ToBoolean(Console.ReadLine());
                         string description = Console.ReadLine();
-                        Observation observation = user.CreateObservation(DateTime.Now, userId, isAnimal, description);
+                        Observation observation = mtd.CreateObservation(DateTime.Now, userId, isAnimal, description);
                         break;
                     case "2":
                         Console.WriteLine("Please enter your name:");
@@ -54,13 +58,14 @@ namespace ACRE_Create_Casus
                                     "\nObservation UserId:" +
                                     "\nIf it is an animal (True if it is an animal, False if it is not an animal):" +
                                     "\nA small description of your Observation:");
+                                //ModelsToDAL mtd = new ModelsToDAL();
                                 int id = Convert.ToInt32(Console.ReadLine());
                                 DateTime date = DateTime.Now;
                                 int usrID = Convert.ToInt32(Console.ReadLine());
                                 bool b_isAnimal = Convert.ToBoolean(Console.ReadLine());
                                 string s_description = Console.ReadLine();
                                 Observation observation1 = new Observation(id, date, usrID, b_isAnimal, s_description, false);
-                                moderator.UpdateObservation(observation1);
+                                mtd.UpdateObservation(observation1);
                                 break;
 
                             case "2":
@@ -68,14 +73,16 @@ namespace ACRE_Create_Casus
                                 Console.WriteLine("Please enter the following of the Observation you want to validate:" +
                                     "\nObservation Id:");
                                 int observationId = Convert.ToInt32(Console.ReadLine());
-                                moderator.ApproveObservation(observationId);
+                                //ModelsToDAL modelsToDAL2 = new ModelsToDAL();
+                                mtd.ApproveObservation(observationId);
                                 break;
 
                             case "3":
                                 Console.WriteLine("Please enter the following of the Observation you want to delete:" +
                                     "\nObservation Id:");
                                 int observationId1 = Convert.ToInt32(Console.ReadLine());
-                                moderator.DeleteObservation(observationId1);
+                                //ModelsToDAL modelsToDAL1 = new ModelsToDAL();
+                                mtd.DeleteObservation(observationId1);
                                 break;
 
                         }
@@ -88,7 +95,7 @@ namespace ACRE_Create_Casus
                         return;
                 }
 
-                Console.WriteLine();
+                Console.WriteLine();*/
             }
 
 

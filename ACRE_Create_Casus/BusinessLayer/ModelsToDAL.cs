@@ -12,9 +12,15 @@ namespace ACRE_Create_Casus.BusinessLayer
     {
         DataAccesLayer dal = new DataAccesLayer();
 
-        public async Task<List<string>> ConnToDal()
+        public List<Guest> CreateGuest(Guest guest)
         {
-            return await DataAccesLayer.ConnectToDB(); // Await the task and return the result
+            List<Guest> guestList = new List<Guest>();
+            guestList.Add(guest);
+            foreach (var x in guestList)
+            {
+                dal.CreateGuests(x);
+            }
+            return guestList;
         }
         //Animal
         //Create animal

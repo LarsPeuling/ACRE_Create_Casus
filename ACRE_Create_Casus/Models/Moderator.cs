@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ACRE_Create_Casus.Models
 {
-    public class Moderator : User
+    public class Moderator : Guest
     {
         public int Id { get; set; }
         public string Name { get; set; }

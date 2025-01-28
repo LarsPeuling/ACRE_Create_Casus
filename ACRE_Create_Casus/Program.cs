@@ -6,114 +6,101 @@ namespace ACRE_Create_Casus
 {
     internal class Program
     {
-        static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
             bool running = true;
             ModelsToDAL mtd = new ModelsToDAL();
-            
 
             while (running)
             {
-                {
-                    var data = await mtd.ConnToDal();
-                    Console.WriteLine($"Data from database: {string.Join(", ", data)}");
-                    Console.WriteLine("Do you want to fetch data again? (y/n)");
-                    string input = Console.ReadLine();
-                    if (input?.ToLower() == "y")
-                    {
-                        // Fetch data again
-                        data = await mtd.ConnToDal();
-                        Console.WriteLine($"Data from database: {string.Join(", ", data)}");
-                    }
-                    else
-                    {
-                        running = false; // Exit the loop if the user does not want to continue
-                    }
-                    //string data = mtd.ConnToDal();
+                Console.WriteLine("Give Guest Role: ");
+                string role = Convert.ToString(Console.ReadLine());
+                Guest g = new Guest(role);
+                mtd.CreateGuest(g);
+                //string data = mtd.ConnToDal();
 
-                    /* Console.WriteLine("Welcome to ACRE_CREATE_CASUS" +
-                     "\nMade By: Team Herkansers" +
-                     "\nPlease choose an option:" +
-                     "\n1. Create an Observation;" +
-                     "\n2. I am a Moderator" +
-                     "\n3. Exit");
+                /* Console.WriteLine("Welcome to ACRE_CREATE_CASUS" +
+                 "\nMade By: Team Herkansers" +
+                 "\nPlease choose an option:" +
+                 "\n1. Create an Observation;" +
+                 "\n2. I am a Moderator" +
+                 "\n3. Exit");
 
-                     //User input
-                     string input = Console.ReadLine();
+                 //User input
+                 string input = Console.ReadLine();
 
-                     switch (input)
-                     {
-                         case "1":
-                             Console.WriteLine("Please state your role:");
-                             string role = Console.ReadLine();
-                             //ModelsToDAL modelsToDAL = new ModelsToDAL();
-                             Console.WriteLine("Please enter the following of your Observation:" +
-                                 "\nYour UserId:" +
-                                 "\nIf it is an animal (True if it is an animal, False if it is not an animal):" +
-                                 "\nA small description of your Observation:");
-                             int userId = Convert.ToInt32(Console.ReadLine());
-                             bool isAnimal = Convert.ToBoolean(Console.ReadLine());
-                             string description = Console.ReadLine();
-                             Observation observation = mtd.CreateObservation(DateTime.Now, userId, isAnimal, description);
-                             break;
-                         case "2":
-                             Console.WriteLine("Please enter your name:");
-                             string name = Console.ReadLine();
-                             Console.WriteLine("Please enter your email:");
-                             string email = Console.ReadLine();
-                             Moderator moderator = new Moderator(1, name, email);
-                             Console.WriteLine("Choose an action to perform:" +
-                                 "\n1. Update Observation;" +
-                                 "\n2. Validate Observation" +
-                                 "\n3. Delete observation");
-                             string action = Console.ReadLine();
-                             switch (action)
-                             {
-                                 case "1":
-                                     Console.WriteLine("Please enter the following of the Observation to be updated:" +
-                                         "\nObservation Id:" +
-                                         "\nObservation UserId:" +
-                                         "\nIf it is an animal (True if it is an animal, False if it is not an animal):" +
-                                         "\nA small description of your Observation:");
-                                     //ModelsToDAL mtd = new ModelsToDAL();
-                                     int id = Convert.ToInt32(Console.ReadLine());
-                                     DateTime date = DateTime.Now;
-                                     int usrID = Convert.ToInt32(Console.ReadLine());
-                                     bool b_isAnimal = Convert.ToBoolean(Console.ReadLine());
-                                     string s_description = Console.ReadLine();
-                                     Observation observation1 = new Observation(id, date, usrID, b_isAnimal, s_description, false);
-                                     mtd.UpdateObservation(observation1);
-                                     break;
-
-                                 case "2":
-                                     Console.WriteLine("");
-                                     Console.WriteLine("Please enter the following of the Observation you want to validate:" +
-                                         "\nObservation Id:");
-                                     int observationId = Convert.ToInt32(Console.ReadLine());
-                                     //ModelsToDAL modelsToDAL2 = new ModelsToDAL();
-                                     mtd.ApproveObservation(observationId);
-                                     break;
-
-                                 case "3":
-                                     Console.WriteLine("Please enter the following of the Observation you want to delete:" +
-                                         "\nObservation Id:");
-                                     int observationId1 = Convert.ToInt32(Console.ReadLine());
-                                     //ModelsToDAL modelsToDAL1 = new ModelsToDAL();
-                                     mtd.DeleteObservation(observationId1);
-                                     break;
-
-                             }
+                 switch (input)
+                 {
+                     case "1":
+                         Console.WriteLine("Please state your role:");
+                         string role = Console.ReadLine();
+                         //ModelsToDAL modelsToDAL = new ModelsToDAL();
+                         Console.WriteLine("Please enter the following of your Observation:" +
+                             "\nYour UserId:" +
+                             "\nIf it is an animal (True if it is an animal, False if it is not an animal):" +
+                             "\nA small description of your Observation:");
+                         int userId = Convert.ToInt32(Console.ReadLine());
+                         bool isAnimal = Convert.ToBoolean(Console.ReadLine());
+                         string description = Console.ReadLine();
+                         Observation observation = mtd.CreateObservation(DateTime.Now, userId, isAnimal, description);
                          break;
-                         case "3":
-                             running = false;
-                             break;
-                         default:
-                             Console.WriteLine("Invalid input");
-                             return;
-                     }
+                     case "2":
+                         Console.WriteLine("Please enter your name:");
+                         string name = Console.ReadLine();
+                         Console.WriteLine("Please enter your email:");
+                         string email = Console.ReadLine();
+                         Moderator moderator = new Moderator(1, name, email);
+                         Console.WriteLine("Choose an action to perform:" +
+                             "\n1. Update Observation;" +
+                             "\n2. Validate Observation" +
+                             "\n3. Delete observation");
+                         string action = Console.ReadLine();
+                         switch (action)
+                         {
+                             case "1":
+                                 Console.WriteLine("Please enter the following of the Observation to be updated:" +
+                                     "\nObservation Id:" +
+                                     "\nObservation UserId:" +
+                                     "\nIf it is an animal (True if it is an animal, False if it is not an animal):" +
+                                     "\nA small description of your Observation:");
+                                 //ModelsToDAL mtd = new ModelsToDAL();
+                                 int id = Convert.ToInt32(Console.ReadLine());
+                                 DateTime date = DateTime.Now;
+                                 int usrID = Convert.ToInt32(Console.ReadLine());
+                                 bool b_isAnimal = Convert.ToBoolean(Console.ReadLine());
+                                 string s_description = Console.ReadLine();
+                                 Observation observation1 = new Observation(id, date, usrID, b_isAnimal, s_description, false);
+                                 mtd.UpdateObservation(observation1);
+                                 break;
 
-                     Console.WriteLine();*/
-                }
+                             case "2":
+                                 Console.WriteLine("");
+                                 Console.WriteLine("Please enter the following of the Observation you want to validate:" +
+                                     "\nObservation Id:");
+                                 int observationId = Convert.ToInt32(Console.ReadLine());
+                                 //ModelsToDAL modelsToDAL2 = new ModelsToDAL();
+                                 mtd.ApproveObservation(observationId);
+                                 break;
+
+                             case "3":
+                                 Console.WriteLine("Please enter the following of the Observation you want to delete:" +
+                                     "\nObservation Id:");
+                                 int observationId1 = Convert.ToInt32(Console.ReadLine());
+                                 //ModelsToDAL modelsToDAL1 = new ModelsToDAL();
+                                 mtd.DeleteObservation(observationId1);
+                                 break;
+
+                         }
+                     break;
+                     case "3":
+                         running = false;
+                         break;
+                     default:
+                         Console.WriteLine("Invalid input");
+                         return;
+                 }
+
+                 Console.WriteLine();*/
 
 
             }

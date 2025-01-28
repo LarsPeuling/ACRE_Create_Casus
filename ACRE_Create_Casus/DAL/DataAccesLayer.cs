@@ -5,89 +5,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZstdSharp.Unsafe;
 
 namespace ACRE_Create_Casus.DAL
 {
     public class DataAccesLayer
     {
-        public static async Task<List<string>> ConnectToDB()
+        public string conString = "Server=20.31.135.94;Port=3306;Database=acre_casus;AllowPublicKeyRetrieval=True;Uid=my_user;Pwd=my_password;";
+
+        public DataAccesLayer()
         {
-            var builder = new MySqlConnectionStringBuilder
-            {
-                Server = "57.153.168.38",
-                Database = "my_database",
-                UserID = "azureuser",
-                Password = "Azureuser!!!",
-                SslMode = MySqlSslMode.Disabled,
-                ConnectionTimeout = 30 // Uncomment to set a timeout
-            };
-
-            var results = new List<string>(); // List to hold the results
-
-            using (var conn = new MySqlConnection(builder.ConnectionString))
-            {
-                Console.WriteLine("Opening connection");
-                await conn.OpenAsync();
-
-                using (var cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = "SELECT * FROM GEBRUIKER";
-                    using (var reader = await cmd.ExecuteReaderAsync())
-                    {
-                        while (await reader.ReadAsync())
-                        {
-
-                            results.Add(reader.GetString(0)); // Add the first column to the results
-                            Console.WriteLine($"{results}");
-                        }
-                    }
-                }
-                Console.WriteLine("Closing connection");
-            }
-
-            return results; // Return the results
+            InitializeDatabase();
         }
 
-        public static async Task ReadData()
+        private void InitializeDatabase()
         {
-            var builder = new MySqlConnectionStringBuilder
-            {
-                Server = "57.153.168.38",
-                Database = "my_database",
-                UserID = "azureuser",
-                Password = "Azureuser!!!",
-                SslMode = MySqlSslMode.Required,
-            };
-
-            using (var conn = new MySqlConnection(builder.ConnectionString))
-            {
-                Console.WriteLine("Opening connection");
-                await conn.OpenAsync();
-
-                using (var command = conn.CreateCommand())
-                {
-                    command.CommandText = "SELECT * FROM inventory;";
-
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        while (await reader.ReadAsync())
-                        {
-                            Console.WriteLine(string.Format(
-                                "Reading from table=({0}, {1}, {2})",
-                                reader.GetInt32(0),
-                                reader.GetString(1),
-                                reader.GetInt32(2)));
-                        }
-                    }
-                }
-
-                Console.WriteLine("Closing connection");
-            }
-
-            Console.WriteLine("Press RETURN to exit");
-            Console.ReadLine();
+            using var con = new MySqlConnection(conString);
         }
 
+        public List<Guest> CreateGuests(Guest guest)
+        {
+            List<Guest> guestlist = new List<Guest>();
+            using var con = new MySqlConnection(conString);
+            con.Open();
+
+            string insertQuery = @"insert into guest (role) values (@role);";
+
+            using (var cmd = new MySqlCommand(insertQuery, con))
+            {
+                cmd.Parameters.AddWithValue("@role", guest.Role);
+                cmd.ExecuteNonQuery();
+            }
+            Console.WriteLine("guest added");
+            return guestlist;
+        } 
 
         //Crud Animal
         public Animal GetAnimal(int id)

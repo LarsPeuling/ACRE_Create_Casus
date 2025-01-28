@@ -8,12 +8,12 @@ using ACRE_Create_Casus.DAL;
 
 namespace ACRE_Create_Casus.Models
 {
-    public class User
+    public class Guest
     {
         public int Id { get; set; }
         public string Role { get; set; }
 
-        public User(string role)
+        public Guest(string role)
         {
             Role = role;
         }

@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using ZstdSharp.Unsafe;
@@ -23,106 +24,289 @@ namespace ACRE_Create_Casus.DAL
             using var con = new MySqlConnection(conString);
         }
 
+
+        //CUD Guest
         public List<Guest> CreateGuests(Guest guest)
         {
             List<Guest> guestlist = new List<Guest>();
             using var con = new MySqlConnection(conString);
             con.Open();
 
-            string insertQuery = @"insert into guest (role) values (@role);";
+            string query = @"insert into guest (role) values (@role);";
 
-            using (var cmd = new MySqlCommand(insertQuery, con))
+            using (var cmd = new MySqlCommand(query, con))
             {
                 cmd.Parameters.AddWithValue("@role", guest.Role);
                 cmd.ExecuteNonQuery();
             }
             Console.WriteLine("guest added");
             return guestlist;
-        } 
+        }
+
+        public void UpdateGuest(Guest guest)
+        {
+            using var con = new MySqlConnection(conString);
+            con.Open();
+
+            string query = $"update guest set role = @role where id = {guest.Id}";
+
+            using (var cmd = new MySqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@role", guest.Role);
+                cmd.ExecuteNonQuery();
+            }
+            Console.WriteLine("Guest Updated");
+        }
+        public void DeleteGuest(int guestId)
+        {
+            using var con = new MySqlConnection(conString);
+            con.Open();
+
+            string query = @"delete from guest where id = @guestId";
+            using (var cmd = new MySqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@guestId", guestId);
+                cmd.ExecuteNonQuery();
+            }
+            Console.WriteLine("Guest Deleted");
+        }
 
         //Crud Animal
-        public Animal GetAnimal(int id)
+        public List<Animal> GetAnimals()
         {
-            return new Animal(1, "Koe", "Weiland", "https://www.google.com");
+            var animals = new List<Animal>();
+            Animal animal = new Animal();
+            using (MySqlConnection cnn = new MySqlConnection(conString))
+            {
+                cnn.Open();
+                var query = "SELECT * FROM animal"; // Zorg ervoor dat je de juiste tabelnaam gebruikt
+                using (MySqlCommand cmd = new MySqlCommand(query, cnn))
+                {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            animal = new Animal
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")), // Pas aan op basis van je kolomnamen
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                Location = reader.GetString(reader.GetOrdinal("Species")),
+                                Photo = reader.GetString(reader.GetOrdinal("Age")),
+                                // Voeg hier andere eigenschappen toe die je hebt in de Animal klasse
+                            };
+                            animals.Add(animal);
+                        }
+                    }
+                }
+            }
+            return animals;
         }
 
-        public Animal CreateAnimal(Animal animal)
+        public void CreateAnimal(Animal animal) 
         {
-            Console.WriteLine($"Animal Created:\n{animal.Id},\n{animal.Name},\n{animal.Location},\n{animal.Photo}");
-            return animal;
+            using var con = new MySqlConnection(conString);
+            con.Open();
+
+            string query = @"insert into animal (name, location, photo) values (@name, @location, @photo);";
+
+            using (var cmd = new MySqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@name", animal.Name);
+                cmd.Parameters.AddWithValue("@location", animal.Location);
+                cmd.Parameters.AddWithValue("@photo", animal.Photo);
+                cmd.ExecuteNonQuery();
+            }
+            Console.WriteLine("Animal added");
         }
 
-        public Animal UpdateAnimal(Animal animal)
+        public void UpdateAnimal(Animal animal)
         {
-            Console.WriteLine($"Animal Updated:\n{animal.Id},\n{animal.Name},\n{animal.Location},\n{animal.Photo}");
-            return animal;
+            using var con = new MySqlConnection(conString);
+            con.Open();
+
+            string query = $"update animal set name = @name, location = @location, photo = @photo where id = {animal.Id};";
+
+            using (var cmd = new MySqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@name", animal.Name);
+                cmd.Parameters.AddWithValue("@location", animal.Location);
+                cmd.Parameters.AddWithValue("@photo", animal.Photo);
+                cmd.ExecuteNonQuery();
+            }
+            Console.WriteLine("Animal Updated");
         }
 
-        public void DeleteAnimal(int id)
+        public void DeleteAnimal(int animalId)
         {
-            Console.WriteLine($"Animal Deleted with id:{id}");
+            using var con = new MySqlConnection(conString);
+            con.Open();
+
+            string query = @"delete from animal where id = @animalId;";
+            using (var cmd = new MySqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@animalId", animalId);
+                cmd.ExecuteNonQuery();
+            }
+            Console.WriteLine("Animal Deleted");
         }
+
 
         //Crud Plant
-
-        public Plant GetPlant(int id)
+        public List<Plant> GetPlant()
         {
-            return new Plant(1, "Koe", "Weiland", "https://www.google.com");
+            var plants = new List<Plant>();
+            Plant plant = new Plant();
+            using (MySqlConnection cnn = new MySqlConnection(conString))
+            {
+                cnn.Open();
+                var query = "SELECT * FROM plant"; // Zorg ervoor dat je de juiste tabelnaam gebruikt
+                using (MySqlCommand cmd = new MySqlCommand(query, cnn))
+                {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            plant = new Plant
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")), // Pas aan op basis van je kolomnamen
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                Location = reader.GetString(reader.GetOrdinal("Species")),
+                                Photo = reader.GetString(reader.GetOrdinal("Age")),
+                                // Voeg hier andere eigenschappen toe die je hebt in de Animal klasse
+                            };
+                            plants.Add(plant);
+                        }
+                    }
+                }
+            }
+
+            return plants;
         }
 
-        public Plant CreatePlant(Plant plant)
+        public void CreatePlant(Plant plant)
         {
-            Console.WriteLine($"Plant Created:\n{plant.Id},\n{plant.Name},\n{plant.Location},\n{plant.Photo}");
-            return plant;
+            using var con = new MySqlConnection(conString);
+            con.Open();
+
+            string query = @"insert into plant (name, location, photo) values (@name, @location, @photo);";
+
+            using (var cmd = new MySqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@name", plant.Name);
+                cmd.Parameters.AddWithValue("@location", plant.Location);
+                cmd.Parameters.AddWithValue("@photo", plant.Photo);
+                cmd.ExecuteNonQuery();
+            }
+            Console.WriteLine("Plant added");
         }
 
-        public Plant UpdatePlant(Plant plant)
+        public void UpdatePlant(Plant plant)
         {
-            Console.WriteLine($"Plant Updated:\n{plant.Id},\n{plant.Name},\n{plant.Location},\n{plant.Photo}");
-            return plant;
+            using var con = new MySqlConnection(conString);
+            con.Open();
+
+            string query = $"update plant set name = @name, location = @location, photo = @photo where id = {plant.Id};";
+
+            using (var cmd = new MySqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@name", plant.Name);
+                cmd.Parameters.AddWithValue("@location", plant.Location);
+                cmd.Parameters.AddWithValue("@photo", plant.Photo);
+                cmd.ExecuteNonQuery();
+            }
+            Console.WriteLine("Plant Updated");
         }
 
-        public void DeletePlant(int id)
+        public void DeletePlant(int plantId)
         {
-            Console.WriteLine($"Plant Deleted with id:{id}");
+            using var con = new MySqlConnection(conString);
+            con.Open();
+
+            string query = @"delete from plant where id = @plantId;";
+            using (var cmd = new MySqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@plantId", plantId);
+                cmd.ExecuteNonQuery();
+            }
+            Console.WriteLine("Plant Deleted");
         }
+
+
 
 
         //Crud Observation
 
-        public Observation GetObservation(int id)
+        public void CreateObservation(Observation observation)
         {
-            return new Observation(1, DateTime.Now,1, true, "Koe is ziek", false);
+            using var con = new MySqlConnection(conString);
+            con.Open();
+
+            string query = $"insert into observation (date, description, guestId, plantId, animalId, picture, approved) values (@date, @description, @guestId, @plantId, @animalId, @picture, @approved) where observation = {observation.Id};";
+
+            using (var cmd = new MySqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@date", observation.Date);
+                cmd.Parameters.AddWithValue("@description", observation.Description);
+                cmd.Parameters.AddWithValue("@guestId", observation.GuestId);
+                cmd.Parameters.AddWithValue("@plantId", observation.PlantId);
+                cmd.Parameters.AddWithValue("@animalId", observation.AnimalId);
+                cmd.Parameters.AddWithValue("@picture", observation.Picture);
+                cmd.Parameters.AddWithValue("@approved", observation.IsApproved);
+                
+                cmd.ExecuteNonQuery();
+            }
+            Console.WriteLine("Observation added");
         }
 
-        public Observation CreateObservation(Observation observation)
+        public void UpdateObservation(Observation observation) 
         {
-            Console.WriteLine($"Observation Created:" +
-                $"\nObservation Id:{observation.Id = 1}" +
-                $"\nObservation Date and Time: {observation.Date}," +
-                $"\nObservation User Id: {observation.UserId}," +
-                $"\nObservation Is an Animal (T/F): {observation.IsAnimal}," +
-                $"\nObservation Description: {observation.Description}, " +
-                $"Observatoin is validated: false");
-            return observation;
+            using var con = new MySqlConnection(conString);
+            con.Open();
+
+            string query = $"update observation set date = @date, description = @description, guestId = @guestId, plantId = @plantId, picture = @picture, approved = @approved where id = {observation.Id};";
+            using (var cmd = new MySqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@date", observation.Date);
+                cmd.Parameters.AddWithValue("@description", observation.Description);
+                cmd.Parameters.AddWithValue("@guestId", observation.GuestId);
+                cmd.Parameters.AddWithValue("@plantId", observation.PlantId);
+                cmd.Parameters.AddWithValue("@animalId", observation.AnimalId);
+                cmd.Parameters.AddWithValue("@picture", observation.Picture);
+                cmd.Parameters.AddWithValue("@approved", observation.IsApproved);
+
+                cmd.ExecuteNonQuery();
+            }
+            Console.WriteLine("Observation updated");
         }
 
-        public Observation ApproveObservation(int observationId)
+
+        public void ApproveObservation(int observationid)
         {
-            Observation observation = GetObservation(observationId);
-            Console.WriteLine($"Observation is approved: {!observation.IsApproved}");
-            return observation;
+            using var con = new MySqlConnection(conString);
+            con.Open();
+
+            string query = $"update observation set approved = @approved where id = {observationid};";
+            using (var cmd = new MySqlCommand(query, con))
+            {
+
+                cmd.Parameters.AddWithValue("@approved", 1);
+                cmd.ExecuteNonQuery();
+            }
+            Console.WriteLine("Observation updated");
         }
 
-        public Observation UpdateObservation(Observation observation)
+        public void DeleteObservation (int observationId)
         {
-            Console.WriteLine($"Observation Updated:\n{observation.Id},\n{observation.Date},\n{observation.UserId},\n{observation.IsAnimal},\n{observation.Description}");
-            return observation;
-        }
+            using var con = new MySqlConnection(conString);
+            con.Open();
 
-        public void DeleteObservation(int id)
-        {
-            Console.WriteLine($"Observation Deleted with id:{id}");
+            string query = $"delete from observation where id = {observationId};";
+            using (var cmd = new MySqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@id", observationId);
+                cmd.ExecuteNonQuery();
+            }
+            Console.WriteLine("Observation Deleted");
         }
     }
 }

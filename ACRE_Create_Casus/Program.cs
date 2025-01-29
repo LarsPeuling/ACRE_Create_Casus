@@ -13,11 +13,48 @@ namespace ACRE_Create_Casus
 
             while (running)
             {
-                Console.WriteLine("Give Guest Role: ");
+                /*Console.WriteLine("Give Guest Role: ");
                 string role = Convert.ToString(Console.ReadLine());
                 Guest g = new Guest(role);
-                mtd.CreateGuest(g);
-                //string data = mtd.ConnToDal();
+                mtd.CreateGuest(g);*/
+
+                Console.WriteLine("create observation:\n" +
+                    "A small description of the observation (200 characters)\n" +
+                    "Your guestId\n" +
+                    "Is it a plant or an animal\n" +
+                    "The path to a picture");
+
+                string desc = Convert.ToString(Console.ReadLine());
+                int gId = Convert.ToInt32(Console.ReadLine());
+                string pOrA = Convert.ToString(Console.ReadLine()).ToLower();
+                string pPath = Convert.ToString(Console.ReadLine());
+
+                switch (pOrA) 
+                {
+                    case "plant":
+                        Console.WriteLine("Plant name:");
+                        string pName = Console.ReadLine();
+                        Console.WriteLine("Plant location");
+                        string pLocation = Console.ReadLine();
+                        Console.WriteLine("photo path");
+                        string pPhoto = Console.ReadLine();
+                        Plant p = new Plant(pName,pLocation,pPhoto);
+                        mtd.CreatePlant(p);
+                        break;
+                    case "animal":
+                        Console.WriteLine("Animal name:");
+                        string aName = Console.ReadLine();
+                        Console.WriteLine("Plant location");
+                        string aLocation = Console.ReadLine();
+                        Console.WriteLine("photo path");
+                        string aPhoto = Console.ReadLine();
+                        Animal a = new Animal(aName, aLocation, aPhoto);
+                        mtd.CreateAnimal(a);
+                        break;
+                }
+
+
+
 
                 /* Console.WriteLine("Welcome to ACRE_CREATE_CASUS" +
                  "\nMade By: Team Herkansers" +

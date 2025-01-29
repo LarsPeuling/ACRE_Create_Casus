@@ -21,5 +21,14 @@ namespace ACRE_Create_Casus.Models
             Location = location;
             Photo = photo;
         }
+
+        public Animal() { }
+
+        public Animal(string name, string location, string photo) 
+        {
+            Name = name;
+            Location = location;
+            Photo = photo;
+        }
     }
 }

@@ -10,28 +10,37 @@ namespace ACRE_Create_Casus.Models
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public int UserId { get; set; }
-        public bool IsAnimal { get; set; }
         public string Description { get; set; }
+        public int GuestId { get; set; }
+        public int PlantId {  get; set; }
+        public int AnimalId { get; set; }
+
+        public string Picture { get; set; }
+        
         public bool IsApproved { get; set; } = false;
 
-        public Observation(int id, DateTime date, int userId, bool isAnimal, string description, bool isApproved)
+        public Observation(int id, DateTime date, string description, int guestId, int plantId, int animalId, string picture, bool isApproved)
         {
             Id = id;
             Date = date;
-            UserId = userId;
-            IsAnimal = isAnimal;
             Description = description;
+            GuestId = guestId;
+            PlantId = plantId;
+            AnimalId = animalId;
+            Picture = picture;
             IsApproved = isApproved;
         }
 
         //Used for creating a new observation
-        public Observation(DateTime date, int userId, bool isAnimal, string description)
+        public Observation(DateTime date, string description, int guestId, int plantId, int animalId, string picture, bool isApproved)
         {
             Date = date;
-            UserId = userId;
-            IsAnimal = isAnimal;
             Description = description;
+            GuestId = guestId;
+            PlantId = plantId;
+            AnimalId = animalId;
+            Picture = picture;
+            IsApproved = isApproved;
         }
     }
 }

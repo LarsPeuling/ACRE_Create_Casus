@@ -24,10 +24,9 @@ namespace ACRE_Create_Casus.BusinessLayer
         }
         //Animal
         //Create animal
-        public Animal CreateAnimal(int id, string name, string location, string photo)
+        public void CreateAnimal(Animal a)
         {
-            Animal a = new Animal(id, name, location, photo);
-            return dal.CreateAnimal(a);
+            dal.CreateAnimal(a);
         }
 
         //Update animal
@@ -45,10 +44,10 @@ namespace ACRE_Create_Casus.BusinessLayer
 
         //Observation
         //Create observation
-        public Observation CreateObservation(DateTime date, int userId, bool isAnimal, string description)
+        public void CreateObservation(DateTime date, string description, int guestId, int plantId, int animalId, string picture, bool isApproved)
         {
-            Observation observation = new Observation(date, userId, isAnimal, description);
-            return dal.CreateObservation(observation);
+            Observation observation = new Observation(date,description, guestId, plantId, animalId, picture, isApproved);
+            dal.CreateObservation(observation);
         }
 
         //Update observation
@@ -71,9 +70,9 @@ namespace ACRE_Create_Casus.BusinessLayer
 
         //Plant
         //Create plant
-        public Plant CreatePlant(int id, string name, string location, string photo)
+        public void CreatePlant(Plant plant)
         {
-            return new Plant(id, name, location, photo);
+            dal.CreatePlant(plant);
         }
 
         //Update plant

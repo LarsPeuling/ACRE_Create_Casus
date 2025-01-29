@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.PortableExecutable;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using ZstdSharp.Unsafe;
@@ -23,7 +24,6 @@ namespace ACRE_Create_Casus.DAL
         {
             using var con = new MySqlConnection(conString);
         }
-
 
         //CUD Guest
         public List<Guest> CreateGuests(Guest guest)
@@ -72,6 +72,38 @@ namespace ACRE_Create_Casus.DAL
         }
 
         //Crud Animal
+
+        public int GetAnimalId(Animal a)
+        {
+            Animal animal = new Animal();
+            using (MySqlConnection cnn = new MySqlConnection(conString))
+            {
+                cnn.Open();
+                var query = "select * from animal where name = @name;";
+                using (MySqlCommand cmd = new MySqlCommand(query, cnn))
+                {
+                    cmd.Parameters.AddWithValue("@name", a.Name);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            animal = new Animal
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")), // Pas aan op basis van je kolomnamen
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                Location = reader.GetString(reader.GetOrdinal("Location")),
+                                Photo = reader.GetString(reader.GetOrdinal("Photo")),
+                                // Voeg hier andere eigenschappen toe die je hebt in de Animal klasse
+                            };
+                        }
+                    }
+                }
+                
+            }
+            return animal.Id;
+        } 
+        
+
         public List<Animal> GetAnimals()
         {
             var animals = new List<Animal>();
@@ -90,7 +122,7 @@ namespace ACRE_Create_Casus.DAL
                             {
                                 Id = reader.GetInt32(reader.GetOrdinal("Id")), // Pas aan op basis van je kolomnamen
                                 Name = reader.GetString(reader.GetOrdinal("Name")),
-                                Location = reader.GetString(reader.GetOrdinal("Species")),
+                                Location = reader.GetString(reader.GetOrdinal("Location")),
                                 Photo = reader.GetString(reader.GetOrdinal("Age")),
                                 // Voeg hier andere eigenschappen toe die je hebt in de Animal klasse
                             };
@@ -152,6 +184,36 @@ namespace ACRE_Create_Casus.DAL
 
 
         //Crud Plant
+        public int GetPlantId(Plant p)
+        {
+            Plant pl = new Plant();
+            using (MySqlConnection cnn = new MySqlConnection(conString))
+            {
+                cnn.Open();
+                var query = "select * from plant where name = @name;";
+                using (MySqlCommand cmd = new MySqlCommand(query, cnn))
+                {
+                    cmd.Parameters.AddWithValue("@name", p.Name);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            pl = new Plant
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")), // Pas aan op basis van je kolomnamen
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                Location = reader.GetString(reader.GetOrdinal("Location")),
+                                Photo = reader.GetString(reader.GetOrdinal("Photo")),
+                                // Voeg hier andere eigenschappen toe die je hebt in de Animal klasse
+                            };
+                        }
+                    }
+                }
+
+            }
+            return pl.Id;
+        }
+
         public List<Plant> GetPlant()
         {
             var plants = new List<Plant>();
@@ -236,12 +298,48 @@ namespace ACRE_Create_Casus.DAL
 
         //Crud Observation
 
+        public List<Observation> GetObservation()
+        {
+            List<Observation> list = new List<Observation>();
+            Observation o = new Observation();
+            using var con = new MySqlConnection(conString);
+            con.Open();
+
+            string query = $"select * from observation";
+            using (MySqlCommand cmd = new MySqlCommand(query, con)) 
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        o = new Observation
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Date = reader.GetDateTime(reader.GetOrdinal("date")),
+                            Description = reader.GetString(reader.GetOrdinal("description")),
+                            GuestId = reader.GetInt32(reader.GetOrdinal("guestId")),
+                            PlantId = reader.GetInt32(reader.GetOrdinal("plantId")),
+                            AnimalId = reader.GetInt32(reader.GetOrdinal("animalId")),
+                            Picture = reader.GetString(reader.GetOrdinal("picture")),
+                            IsApproved = reader.GetBoolean(reader.GetOrdinal("approved"))
+                            
+                        };
+                        list.Add(o);
+                    }
+                    return list;
+                }
+            }
+            
+        }
+
         public void CreateObservation(Observation observation)
         {
             using var con = new MySqlConnection(conString);
             con.Open();
 
-            string query = $"insert into observation (date, description, guestId, plantId, animalId, picture, approved) values (@date, @description, @guestId, @plantId, @animalId, @picture, @approved) where observation = {observation.Id};";
+            string query = $"insert into observation " +
+                $"(date, description, guestId, plantId, animalId, picture, approved) " +
+                $"values (@date, @description, @guestId, @plantId, @animalId, @picture, @approved);";
 
             using (var cmd = new MySqlCommand(query, con))
             {
@@ -307,6 +405,39 @@ namespace ACRE_Create_Casus.DAL
                 cmd.ExecuteNonQuery();
             }
             Console.WriteLine("Observation Deleted");
+        }
+
+        public void CreateModerator(string email, string name)
+        {
+            using var con = new MySqlConnection(conString);
+            con.Open();
+
+            string query = $"insert into moderator (name, email) values (@name, @email);";
+            using (var cmd = new MySqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@name", name);
+                cmd.Parameters.AddWithValue("@email", email);
+                
+                cmd.ExecuteNonQuery();
+            }
+            Console.WriteLine("Moderator added");
+        }
+
+        public bool DoesModeratorExist(string mId)
+        {
+            using var con = new MySqlConnection(conString);
+            con.Open();
+
+            string query = $"SELECT COUNT(*) FROM moderator WHERE name = @name;";
+            using (var cmd = new MySqlCommand(query, con))
+            {
+                cmd.Parameters.AddWithValue("@name", mId);
+                int count = Convert.ToInt32(cmd.ExecuteScalar());
+
+                // Return true if count is greater than 0, otherwise false
+
+                return count > 0;
+            }
         }
     }
 }

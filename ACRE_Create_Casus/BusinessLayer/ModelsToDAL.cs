@@ -23,6 +23,12 @@ namespace ACRE_Create_Casus.BusinessLayer
             return guestList;
         }
         //Animal
+
+        public int GetAnimalId(Animal a)
+        {
+            return dal.GetAnimalId(a);
+        }
+
         //Create animal
         public void CreateAnimal(Animal a)
         {
@@ -44,11 +50,11 @@ namespace ACRE_Create_Casus.BusinessLayer
 
         //Observation
         //Create observation
-        public void CreateObservation(DateTime date, string description, int guestId, int plantId, int animalId, string picture, bool isApproved)
+        public void CreateObservation(Observation o)
         {
-            Observation observation = new Observation(date,description, guestId, plantId, animalId, picture, isApproved);
-            dal.CreateObservation(observation);
+            dal.CreateObservation(o);
         }
+
 
         //Update observation
         public void UpdateObservation(Observation observation)
@@ -70,6 +76,11 @@ namespace ACRE_Create_Casus.BusinessLayer
 
         //Plant
         //Create plant
+        public int GetPlantId(Plant p)
+        {
+            return dal.GetPlantId(p);
+        }
+
         public void CreatePlant(Plant plant)
         {
             dal.CreatePlant(plant);
@@ -85,6 +96,21 @@ namespace ACRE_Create_Casus.BusinessLayer
         public void DeletePlant(int plantId)
         {
             dal.DeletePlant(plantId);
+        }
+
+        public void CreateModerator(string email, string name)
+        {
+            dal.CreateModerator(email, name);
+        }
+
+        public bool DoesModeratorExist(string mId)
+        {
+            return dal.DoesModeratorExist(mId);
+        }
+
+        public List<Observation> GetObservation()
+        {
+            return dal.GetObservation();
         }
 
     }
